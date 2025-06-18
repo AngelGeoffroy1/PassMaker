@@ -6,9 +6,14 @@ const openai = process.env.OPENAI_API_KEY ? new OpenAI({
 }) : null
 
 export async function POST(request: NextRequest) {
+  console.log('[API] Début de la requête generate-design')
+  
   try {
     // Vérifier que la clé API est configurée
+    console.log('[API] Vérification de la clé OpenAI...', process.env.OPENAI_API_KEY ? 'Présente' : 'Absente')
+    
     if (!openai) {
+      console.log('[API] Erreur: Clé API OpenAI non configurée')
       return NextResponse.json(
         { success: false, error: 'Clé API OpenAI non configurée' },
         { status: 500 }
@@ -16,6 +21,8 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
+    console.log('[API] Body reçu:', body)
+    
     const { 
       text, 
       textPosition, 
@@ -61,6 +68,9 @@ STYLE REQUIREMENTS:
 The bracelet should look like a real, high-quality product that customers would want to purchase.`
 
     // Appel à l'API DALL-E 3
+    console.log('[API] Appel à OpenAI DALL-E 3...')
+    console.log('[API] Prompt généré:', prompt.substring(0, 100) + '...')
+    
     const response = await openai.images.generate({
       model: "dall-e-3",
       prompt: prompt,
@@ -69,6 +79,8 @@ The bracelet should look like a real, high-quality product that customers would 
       quality: "hd",
       style: "natural"
     })
+    
+    console.log('[API] Réponse OpenAI reçue')
 
     const imageUrl = response.data?.[0]?.url
 
@@ -76,6 +88,8 @@ The bracelet should look like a real, high-quality product that customers would 
       throw new Error('Aucune image générée')
     }
 
+    console.log('[API] Succès! Image URL:', imageUrl)
+    
     return NextResponse.json({ 
       success: true, 
       imageUrl,
@@ -83,7 +97,8 @@ The bracelet should look like a real, high-quality product that customers would 
     })
 
   } catch (error) {
-    console.error('Erreur génération IA:', error)
+    console.error('[API] Erreur génération IA:', error)
+    console.error('[API] Stack trace:', error instanceof Error ? error.stack : 'Pas de stack trace')
     
     // Gestion des erreurs spécifiques d'OpenAI
     if (error instanceof Error) {

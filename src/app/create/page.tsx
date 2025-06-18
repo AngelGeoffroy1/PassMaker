@@ -88,6 +88,7 @@ export default function CreatePage() {
     setIsGenerating(true)
     
     try {
+      console.log('Envoi de la requête à l\'API...')
       const response = await fetch('/api/generate-design', {
         method: 'POST',
         headers: {
@@ -107,18 +108,29 @@ export default function CreatePage() {
         })
       })
 
+      console.log('Réponse reçue:', response.status, response.statusText)
+      
+      // Vérifier si la réponse est du JSON
+      const contentType = response.headers.get('content-type')
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text()
+        console.error('Réponse non-JSON:', text)
+        throw new Error(`Serveur a retourné du ${contentType} au lieu de JSON`)
+      }
+
       const data = await response.json()
+      console.log('Données reçues:', data)
       
       if (data.success) {
         setGeneratedDesign(data.imageUrl)
         handleNextStep()
       } else {
-        console.error('Erreur:', data.error)
+        console.error('Erreur API:', data.error)
         alert(`Erreur lors de la génération: ${data.error}`)
       }
     } catch (error) {
       console.error('Erreur réseau:', error)
-      alert('Erreur de connexion. Veuillez réessayer.')
+      alert(`Erreur de connexion: ${error instanceof Error ? error.message : 'Erreur inconnue'}`)
     } finally {
       setIsGenerating(false)
     }
