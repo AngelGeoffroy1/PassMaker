@@ -1,0 +1,12 @@
+[build]
+  base = "passmaker"
+  command = "npm run build"
+  publish = "passmaker/.next"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[build.environment]
+  NODE_VERSION = "18"
