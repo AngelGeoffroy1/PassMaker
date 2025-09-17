@@ -1,7 +1,7 @@
 [build]
   base = "passmaker"
   command = "npm run build"
-  publish = "passmaker/.next"
+  publish = ".next"
 
 [[redirects]]
   from = "/*"
