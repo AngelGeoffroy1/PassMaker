@@ -29,6 +29,13 @@ export interface TechnicalZones {
     url: string
     position: 'left' | 'right'
   }
+  numbering: {
+    enabled: boolean
+    width: number // mm
+    height: number // mm
+    position: 'left' | 'right'
+  }
+  cutMarks: boolean
 }
 
 export interface BraceletResult {

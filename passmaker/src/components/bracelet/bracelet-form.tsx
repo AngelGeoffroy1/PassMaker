@@ -39,7 +39,9 @@ export function BraceletForm({ onSubmit, status }: BraceletFormProps) {
     style: 'integrated'
   })
   const [technicalZones, setTechnicalZones] = useState<TechnicalZones>({
-    qrCode: { enabled: false, url: '', position: 'right' }
+    qrCode: { enabled: false, url: '', position: 'right' },
+    numbering: { enabled: false, width: 10, height: 5, position: 'left' },
+    cutMarks: false
   })
   const [customColors, setCustomColors] = useState<string[]>(['#FF0080', '#00FFFF', '#FFFF00'])
 
@@ -78,7 +80,7 @@ export function BraceletForm({ onSubmit, status }: BraceletFormProps) {
   const handleSubmit = (data: z.infer<typeof formSchema>) => {
     const braceletData: BraceletForm = {
       ...data,
-      logoOptions: data.logoFile ? { ...logoOptions, base64Data: logoPreview } : undefined,
+      logoOptions: data.logoFile ? { ...logoOptions, base64Data: logoPreview || undefined } : undefined,
       customColors: data.colorPalette === 'custom' ? customColors : undefined
     }
     onSubmit(braceletData, technicalZones)

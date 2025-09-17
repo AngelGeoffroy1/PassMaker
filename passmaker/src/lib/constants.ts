@@ -2,12 +2,14 @@ export const PRINT_SPECS = {
   TYVEK: {
     width: 150, // mm
     height: 14, // mm
-    dpi: 300
+    dpi: 300,
+    format: 'tyvek' as const
   },
   VINYL: {
     width: 150, // mm 
     height: 25, // mm
-    dpi: 300
+    dpi: 300,
+    format: 'vinyl' as const
   }
 } as const
 

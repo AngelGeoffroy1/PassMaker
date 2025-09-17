@@ -185,8 +185,14 @@ export class ImageProcessor {
   }
 
   private async generatePNG(): Promise<Blob> {
-    return new Promise(resolve => {
-      this.canvas.toBlob(resolve!, 'image/png', 1)
+    return new Promise((resolve, reject) => {
+      this.canvas.toBlob((blob) => {
+        if (blob) {
+          resolve(blob)
+        } else {
+          reject(new Error('Failed to generate PNG blob'))
+        }
+      }, 'image/png', 1)
     })
   }
 
